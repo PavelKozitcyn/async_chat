@@ -1,89 +1,118 @@
-# Задание 1 1. Каждое из слов «разработка», «сокет», «декоратор»
-# представить в строковом формате и проверить тип и содержание соответствующих
-# переменных. Затем с помощью онлайн-конвертера преобразовать строковые
-# представление в формат Unicode и также проверить тип и содержимое переменных.
+import locale
 
-r = 'Разработка'
-s = 'Сокет'
-d = "Декоратор"
+'''1. Каждое из слов «разработка», «сокет», «декоратор» представить в строковом формате и
+проверить тип и содержание соответствующих переменных. Затем с помощью
+онлайн-конвертера преобразовать строковые представление в формат Unicode и также
+проверить тип и содержимое переменных'''
 
-def type_checker(a,b,c):
-    print(type(a),a)
-    print(type(b),b)
-    print(type(c),c)
+words_list = ["разработка","сокет","декоратор"]
+bytes_1 = b'\xd1\x80\xd0\xb0\xd0\xb7\xd1\x80\xd0\xb0\xd0\xb1\xd0\xbe\xd1\x82\xd0\xba\xd0\xb0'
+bytes_2 = b'\xd1\x81\xd0\xbe\xd0\xba\xd0\xb5\xd1\x82'
+bytes_3 = b'\xd0\xb4\xd0\xb5\xd0\xba\xd0\xbe\xd1\x80\xd0\xb0\xd1\x82\xd0\xbe\xd1\x80'
 
-type_checker(r,s,d)
+for el in words_list:
+    print(type(el))
+    print(el)
 
-def bt_checker(a,b,c):
-    a = a.encode('utf-8')
-    b = b.encode('utf-8')
-    c = c.encode('utf-8')
-    a = a.decode('utf-8')
-    b = b.decode('utf-8')
-    c = c.decode('utf-8')
-    type_checker(a,b,c)
+bytes_list = [bytes_1, bytes_2, bytes_3]
 
-bt_checker(r,s,d)
-print(2)
-# 2. Каждое из слов «class», «function», «method» записать в байтовом типе без преобразования в последовательность
-# кодов (не используя методы encode и decode) и определить тип, содержимое и длину соответствующих переменных.
+for el in bytes_list:
+    print(type(el))
+    print(el)
 
-c = bytes('class', 'utf-8')
-f = bytes('function', 'utf-8')
-m = bytes('method', 'utf-8')
-print(type(c),c, len(c))
-print(type(f),f, len(f))
-print(type(m),m, len(m))
 
-print(3)
-#  Определить, какие из слов «attribute», «класс», «функция», «type» невозможно записать в байтовом типе.
-try:   # Но здесь не выбрасывается исключение, зачем try/exept?
-    a = bytes('attribute', 'utf-8')
-    c = bytes('класс', 'utf-8')
-    f = bytes('функция', 'utf-8')
-    t = bytes('type', 'utf-8')
-    print(a, c, f, t)
-    print(t, 'Невозможно записать в байтовом типе')
-except:
-    print('Exeption')
+'''2. Каждое из слов «class», «function», «method» записать в байтовом типе без преобразования в
+последовательность кодов (не используя методы encode и decode) и определить тип,
+содержимое и длину соответствующих переменных''' 
 
-print(4)
-# 4. Преобразовать слова «разработка», «администрирование», «protocol», «standard» из строкового представления
-# в байтовое и выполнить обратное преобразование (используя методы encode и decode).
+bytes_4 = b'class'
+bytes_5 = b'function'
+bytes_6 = b'method'
 
-r = 'разработка'
-a = 'администрирование'
-p = 'protocol'
-s = 'standard'
+bytes_list_1 = [bytes_4, bytes_5, bytes_6]
 
-for i in (r,a,p,s):
-    i = i.encode('utf-8')
-    print(i)
-    i = i.decode('utf-8')
-    print(i)
+for el in bytes_list_1:
+    print(type(el))
+    print(el)
+    print(len(el))
 
-print(5)
-# 5. Выполнить пинг веб-ресурсов yandex.ru, youtube.com и преобразовать результаты из байтовового
-# в строковый тип на кириллице.
+
+"""3. Определить, какие из слов «attribute», «класс», «функция», «type» невозможно записать в
+байтовом типе."""
+
+words_list1 = ['attribute', 'класс', 'функция','type']
+
+for el in words_list1:
+    try:
+        print(bytes(el, 'ascii'))
+    except UnicodeEncodeError:
+        print(f'{el} невозможно записать в  байтовом типе')
+
+
+"""4. Преобразовать слова «разработка», «администрирование», «protocol», «standard» из
+строкового представления в байтовое и выполнить обратное преобразование (используя
+методы encode и decode)."""
+
+string_list = ['разработка', 'администрирование', 'protocol', 'standard']
+list_to_utf8 = []
+list_to_str =[]
+
+for el in string_list:
+    try:
+        elm = el.encode("UTF-8", 'ignore')
+        list_to_utf8.append(elm)
+    except UnicodeEncodeError:
+        print(f'{el} невозможно записать в  байтовом типе')
+
+print(list_to_utf8)
+
+for el in list_to_utf8:
+    try:
+        elm = el.decode('UTF-8','ignore')
+        list_to_str.append(elm)
+    except UnicodeEncodeError:
+        print(f'{el} неправильная кодировка')
+
+print(list_to_str)
+
+
+"""
+5. Выполнить пинг веб-ресурсов yandex.ru, youtube.com и
+преобразовать результаты из байтовового в строковый тип на кириллице."""
+
 import subprocess
 import chardet
 
-def ping_checker(host):
+ARGS = ['ping', 'yandex.ru']
+YA_PING = subprocess.Popen(ARGS, stdout=subprocess.PIPE)
+for line in YA_PING.stdout:
+    result = chardet.detect(line)
+    line = line.decode(result['encoding']).encode('utf-8')
+    print(line.decode('utf-8'))
 
-    args = ['ping', host]
-    subproc_ping = subprocess.Popen(args, stdout=subprocess.PIPE)
-    for line in subproc_ping.stdout:
-        result = chardet.detect(line)
-        line = line.decode(result['encoding']).encode('utf-8')
-        print(line.decode('utf-8'))
+ARGS_2 = ['ping', 'youtube.com']
+G_PING = subprocess.Popen(ARGS_2, stdout=subprocess.PIPE)
+for line in G_PING.stdout:
+    result = chardet.detect(line)
+    line = line.decode(result['encoding']).encode('utf-8')
+    print(line.decode('utf-8'))
 
-ping_checker('google.com')
-ping_checker('yandex.ru')
 
-print(6)
-# Создать текстовый файл test_file.txt.txt, заполнить его тремя строками: «сетевое программирование», «сокет», «декоратор».
-# Проверить кодировку файла по умолчанию. Принудительно открыть файл в формате Unicode и вывести его содержимое
-with open('test_file.txt.txt', 'r') as t:
-    print(t.encoding)
-with open('test_file.txt.txt', 'r', encoding='utf-8') as t:
-    print(t.readlines())
+"""
+6. Создать текстовый файл test_file.txt, заполнить его тремя строками: 
+«сетевое программирование», «сокет», «декоратор». 
+Проверить кодировку файла по умолчанию. 
+Принудительно открыть файл в формате Unicode и вывести содержимое."""
+
+
+def_coding = locale.getpreferredencoding()
+print(def_coding)
+
+F_N = open('test_file.txt', 'w')
+F_N.write('сетевое программирование сокет декоратор')
+F_N.close()
+print(type(F_N))
+
+with open('test_file.txt','r', encoding='utf-8') as lr1:
+    for line in lr1:
+        print(line, end="")
