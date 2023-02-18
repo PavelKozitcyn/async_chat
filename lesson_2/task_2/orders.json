@@ -1,0 +1,60 @@
+{
+    "orders": [
+        {
+            "item": "PC",
+            "quantity": "10",
+            "price": "6700",
+            "buyer": "Андронов М.А.",
+            "date": "24.09.2017"
+        },
+        {
+            "item": "компьютер",
+            "quantity": "5",
+            "price": "40000",
+            "buyer": "Sidorov S.S.",
+            "date": "2.05.2019"
+        },
+        {
+            "item": "PC",
+            "quantity": "10",
+            "price": "6700",
+            "buyer": "Андронов М.А.",
+            "date": "24.09.2017"
+        },
+        {
+            "item": "криптогенератор",
+            "quantity": "20",
+            "price": "10000",
+            "buyer": "Kozic P.O.",
+            "date": "18.02.2023"
+        },
+        {
+            "item": "компьютер",
+            "quantity": "5",
+            "price": "40000",
+            "buyer": "Sidorov S.S.",
+            "date": "2.05.2019"
+        },
+        {
+            "item": "PC",
+            "quantity": "10",
+            "price": "6700",
+            "buyer": "Андронов М.А.",
+            "date": "24.09.2017"
+        },
+        {
+            "item": "криптогенератор",
+            "quantity": "20",
+            "price": "10000",
+            "buyer": "Kozic P.O.",
+            "date": "18.02.2023"
+        },
+        {
+            "item": "компьютер",
+            "quantity": "5",
+            "price": "40000",
+            "buyer": "Sidorov S.S.",
+            "date": "2.05.2019"
+        }
+    ]
+}
