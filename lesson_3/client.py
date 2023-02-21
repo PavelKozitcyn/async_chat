@@ -24,21 +24,36 @@ def process_ans(message):
     raise ValueError
 
 
-def main():
+def c_adress_cheker():
     try:
-        server_address = sys.argv[1]
-        server_port = int(sys.argv[2])
-        if server_port < 1024 or server_port > 65535:
-            raise ValueError
+        server_adress = sys.argv[1]
     except IndexError:
-        server_address = '127.0.0.1'
-        server_port = 7777
+        server_adress = '127.0.0.1'
+        return server_adress
     except ValueError:
         print('В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
         sys.exit(1)
 
+
+def c_port_cheker():
+    try:
+        server_port = int(sys.argv[2])
+        if server_port < 1024 or server_port > 65535:
+            raise ValueError
+    except IndexError:
+        server_port = 7777
+        return server_port
+    except ValueError:
+        print('В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
+        sys.exit(1)
+
+
+def main():
+    server_adress = c_adress_cheker()
+    server_port = c_port_cheker()
+
     transport = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    transport.connect((server_address, server_port))
+    transport.connect((server_adress, server_port))
     message_to_server = create_presence()
     send_message(transport, message_to_server)
     try:

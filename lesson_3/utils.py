@@ -1,5 +1,6 @@
 import json
 
+
 def get_message(client):
     encoded_response = client.recv(1024)
     if isinstance(encoded_response, bytes):
@@ -10,7 +11,9 @@ def get_message(client):
         raise ValueError
     raise ValueError
 
+
 def send_message(sock, message):
     js_message = json.dumps(message)
     encoded_message = js_message.encode('UTF-8')
     sock.send(encoded_message)
+    return 1
