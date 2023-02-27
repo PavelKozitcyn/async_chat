@@ -3,9 +3,10 @@ import json
 import socket
 import time
 from utils import *
+from log.client_log_config import *
 
 
-def create_presence(account_name='Guest'):
+def create_presence(account_name='Paul'):
     out = {
         'action': 'presence',
         'time': time.time(),
@@ -19,7 +20,9 @@ def create_presence(account_name='Guest'):
 def process_ans(message):
     if 'response' in message:
         if message['response'] == 200:
+            log.info('response OK')
             return '200 : OK'
+        log.critical(f'400 : {message["error"]}')
         return f'400 : {message["error"]}'
     raise ValueError
 
@@ -31,7 +34,7 @@ def c_adress_cheker():
         server_adress = '127.0.0.1'
         return server_adress
     except ValueError:
-        print('В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
+        log.critical('В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
         sys.exit(1)
 
 
@@ -44,7 +47,7 @@ def c_port_cheker():
         server_port = 7777
         return server_port
     except ValueError:
-        print('В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
+        log.critical('В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
         sys.exit(1)
 
 
@@ -60,7 +63,7 @@ def main():
         answer = process_ans(get_message(transport))
         print(answer)
     except (ValueError, json.JSONDecodeError):
-        print('Не удалось декодировать сообщение сервера.')
+        log.critical('Не удалось декодировать сообщение сервера.')
 
 
 if __name__ == '__main__':

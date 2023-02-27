@@ -3,12 +3,15 @@ from socket import *
 import time
 import sys
 from utils import *
+from log.server_log_config import *
 
 
 def process_client_message(message):
     if 'action' in message and message['action'] == 'presence' and 'time' in message \
-            and 'user' in message and message['user']['account_name'] == 'Guest':
+            and 'user' in message and message['user']['account_name'] == 'Paul':
+        log.info('OK')
         return {'response': 200}
+    log.critical('Bad request')
     return {
         'response': 400,
         'error': 'Bad Request'
@@ -24,11 +27,10 @@ def check_port():
         if listen_port < 1024 or listen_port > 65535:
             raise ValueError
     except IndexError:
-        print('После параметра -\'p\' необходимо указать номер порта.')
+        log.critical('После параметра -\'p\' необходимо указать номер порта.')
         sys.exit(1)
     except ValueError:
-        print(
-            'В качастве порта может быть указано только число в диапазоне от 1024 до 65535.')
+        log.critical('В качастве порта может быть указано только число в диапазоне от 1024 до 65535.')
         sys.exit(1)
 
     return listen_port
@@ -42,7 +44,7 @@ def check_adress():
             listen_adress = ''
 
     except IndexError:
-        print(
+        log.critical(
             'После параметра \'a\'- необходимо указать адрес, который будет слушать сервер.')
         sys.exit(1)
     return listen_adress
@@ -60,7 +62,7 @@ def handler_message(a):
             client.close()
             return 1
         except (ValueError, json.JSONDecodeError):
-            print('Принято некорретное сообщение от клиента.')
+            log.critical('Принято некорретное сообщение от клиента.')
             client.close()
             return 1
 
