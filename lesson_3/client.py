@@ -17,6 +17,7 @@ def create_presence(account_name='Paul'):
     return out
 
 
+@MyLogger()
 def process_ans(message):
     if 'response' in message:
         if message['response'] == 200:
@@ -26,7 +27,7 @@ def process_ans(message):
         return f'400 : {message["error"]}'
     raise ValueError
 
-
+@MyLogger()
 def c_adress_cheker():
     try:
         server_adress = sys.argv[1]
@@ -37,7 +38,7 @@ def c_adress_cheker():
         log.critical('В качестве порта может быть указано только число в диапазоне от 1024 до 65535.')
         sys.exit(1)
 
-
+@MyLogger()
 def c_port_cheker():
     try:
         server_port = int(sys.argv[2])

@@ -6,6 +6,7 @@ from utils import *
 from log.server_log_config import *
 
 
+@MyServerLogger()
 def process_client_message(message):
     if 'action' in message and message['action'] == 'presence' and 'time' in message \
             and 'user' in message and message['user']['account_name'] == 'Paul':
@@ -18,6 +19,7 @@ def process_client_message(message):
     }
 
 
+@MyServerLogger()
 def check_port():
     try:
         if '-p' in sys.argv:
@@ -36,6 +38,7 @@ def check_port():
     return listen_port
 
 
+@MyServerLogger()
 def check_adress():
     try:
         if '-a' in sys.argv:
@@ -50,6 +53,7 @@ def check_adress():
     return listen_adress
 
 
+@MyServerLogger()
 def handler_message(a):
     transport = a
     while True:
