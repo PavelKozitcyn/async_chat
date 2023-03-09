@@ -1,63 +1,120 @@
-import time
+import sys
+import json
+import logging
 import select
+import argparse
+import time
+import log.server_log_config
+
 from socket import socket, AF_INET, SOCK_STREAM
+from utils import send_message, get_message
+from log.server_log_config import MyServerLogger
+
+logger = logging.getLogger("server_log")
+clients_id_dict = {}
 
 
-def read_requests(r_clients, all_clients):
-    responses = []
-
-    for sock in r_clients:
-        try:
-            data = sock.recv(1024).decode('utf-8')
-            responses.append(data)
-        except:
-            print('Клиент {} {} отключился'.format(sock.fileno(), sock.getpeername()))
-            all_clients.remove(sock)
-
-    return responses
-
-
-def write_responses(requests, w_clients, all_clients):
-    for sock in w_clients:
-        try:
-            for request in requests:
-                resp = request.encode('utf-8')
-                sock.send(resp)
-        except Exception as e:
-            print('Клиент {} {} отключился'.format(sock.fileno(), sock.getpeername()))
-            sock.close()
-            all_clients.remove(sock)
+@MyServerLogger()
+def proccess_client_message(message, messages_list, client):
+    logger.debug(f"Message proccesing: {message}")
+    if "action" in message and message["action"] == "presence" and "time" in message and "user" in message:
+        clients_id_dict[client] = message["user"]["account_name"]
+        send_message(client, {"response": 200})
+        return
+    elif "action" in message and message["action"] == "message" and "time" in message and "message_text" in message:
+        messages_list.append((message["account_name"], message["message_text"], message["destination"]))
+        return
+    else:
+        send_message(client, {"response": 400, "error": "bad request"})
+        return
 
 
-def mainloop():
-    address = ('', 10000)
-    clients = []
+@MyServerLogger()
+def arg_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-p", default=7777, type=int, nargs="?")
+    parser.add_argument("-a", default="0.0.0.0", nargs="?")
+    namespace = parser.parse_args(sys.argv[1:])
+    listen_port = namespace.p
+    listen_address = namespace.a
 
+    if not 1024 < listen_port < 65536:
+        logger.critical(f"IndexError. Invalid port {listen_port} was given")
+        sys.exit(1)
+
+    return listen_address, listen_port
+
+
+def main():
+    s_address, s_port = arg_parser()
+    logger.info(f"App starts at {s_address} {s_port}")
     s = socket(AF_INET, SOCK_STREAM)
-    s.bind(address)
+    s.bind((s_address, s_port))
+    s.settimeout(0.5)
     s.listen(5)
-    s.settimeout(0.2)
+
+    clients, messages = [], []
+
     while True:
         try:
-            conn, addr = s.accept()
-        except OSError as e:
+            client, client_address = s.accept()
+        except OSError:
             pass
         else:
-            print('Получен запрос на соединение от %s' % str(addr))
-            clients.append(conn)
-        finally:
-            wait = 100
-            r = []
-            w = []
-            try:
-                r, w, e = select.select(clients, clients, [], wait)
-            except:
-                pass
+            logger.info(f"Connection established with {client_address}")
+            clients.append(client)
 
-            requests = read_requests(r, clients)
-            if requests:
-                write_responses(requests, w, clients)
+        recv_data_list = []
+        send_data_list = []
+        err_list = []
+
+        try:
+            if clients:
+                recv_data_list, send_data_list, err_list = select.select(clients, clients, [], 0)
+        except OSError:
+            pass
+
+        if recv_data_list:
+            for client_with_message in recv_data_list:
+                try:
+                    proccess_client_message(get_message(client_with_message), messages, client_with_message)
+                except:
+                    logger.info(f"Client {client_with_message.getpeername()} disconected from server")
+                    clients.remove(client_with_message)
+
+        if messages and send_data_list:
+            message = {
+                "action": "message",
+                "sender": messages[0][0],
+                "time": time.time(),
+                "message_text": messages[0][1],
+                "destination": messages[0][2]
+            }
+            del messages[0]
+            if message.get("destination") in clients_id_dict.values():
+                reciever = list(clients_id_dict.keys())[
+                    list(clients_id_dict.values()).index(message.get("destination"))]
+                try:
+                    send_message(reciever, message)
+                except:
+                    logger.info(f"Client {waiting_client.getpeername()} disconected from server")
+                    clients.remove(reciever)
+            elif message.get("destination") == None:
+                for waiting_client in send_data_list:
+                    try:
+                        send_message(waiting_client, message)
+                    except:
+                        logger.info(f"Client {waiting_client.getpeername()} disconected from server")
+                        clients.remove(waiting_client)
+            elif message.get("destination") != None and message.get("destination") not in clients_id_dict.values():
+                sender = list(clients_id_dict.keys())[list(clients_id_dict.values()).index(message.get("sender"))]
+                try:
+                    message["message_text"] = "ERROR: No such user"
+                    send_message(sender, message)
+                except:
+                    logger.info(f"Client {waiting_client.getpeername()} disconected from server")
+                    clients.remove(sender)
 
 
-print('Start')
-mainloop()
+if __name__ == "__main__":
+    main()
