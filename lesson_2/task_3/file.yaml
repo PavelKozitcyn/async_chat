@@ -1,0 +1,11 @@
+items:
+- cheese
+- grape
+- chocolate
+- caviar
+items_quantity: 4
+items_price:
+  cheese: 550€
+  grape: 300€
+  chocolate: 450€
+  caviar: 2089€
