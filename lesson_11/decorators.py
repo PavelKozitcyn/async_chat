@@ -1,7 +1,7 @@
 import sys
 import logging
-import log.server_log_config
-import log.client_log_config
+import logs.config_server_log
+import logs.config_client_log
 import traceback
 import inspect
 
