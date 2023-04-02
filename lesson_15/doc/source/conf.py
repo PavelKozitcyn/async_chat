@@ -14,6 +14,7 @@
 #
 import os
 import sys
+
 # sys.path.insert(0, os.path.abspath('.'))
 
 path = os.path.dirname(os.path.abspath('../../launcher.py'))
@@ -39,8 +40,6 @@ templates_path = ['_templates']
 language = 'ru'
 
 exclude_patterns = []
-
-
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
