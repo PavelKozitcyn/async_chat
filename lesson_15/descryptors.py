@@ -5,7 +5,7 @@ import sys
 # метод определения модуля, источника запуска.
 if sys.argv[0].find('client') == -1:
     # если не клиент то сервер!
-    logger = logging.getLogger('server')
+    logger = logging.getLogger('server_pack')
 else:
     # ну, раз не сервер, то клиент
     logger = logging.getLogger('client')

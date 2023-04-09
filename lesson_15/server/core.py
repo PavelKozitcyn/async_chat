@@ -13,7 +13,7 @@ from common.utils import send_message, get_message
 from common.decos import login_required
 
 # Загрузка логера
-logger = logging.getLogger('server')
+logger = logging.getLogger('server_pack')
 
 
 class MessageProcessor(threading.Thread):

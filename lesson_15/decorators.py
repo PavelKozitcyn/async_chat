@@ -7,7 +7,7 @@ import inspect
 
 if sys.argv[0].find('client') == -1:
 
-    LOG = logging.getLogger('server')
+    LOG = logging.getLogger('server_pack')
 else:
 
     LOG = logging.getLogger('client')

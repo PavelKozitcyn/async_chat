@@ -37,7 +37,7 @@ class Storage:
 
 class StorageServer(Storage):
     def __init__(self):
-        super().__init__('server')
+        super().__init__('server_pack')
 
 class StorageClient(Storage):
     def __init__(self):

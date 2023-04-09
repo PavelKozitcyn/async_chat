@@ -13,7 +13,7 @@ ENCODING = 'utf-8'
 # Текущий уровень логирования
 LOGGING_LEVEL = logging.DEBUG
 # База данных для хранения данных сервера:
-SERVER_CONFIG = 'server.ini'
+SERVER_CONFIG = 'server_pack.ini'
 
 # Прококол JIM основные ключи:
 ACTION = 'action'
